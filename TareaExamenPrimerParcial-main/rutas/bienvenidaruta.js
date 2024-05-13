@@ -23,8 +23,8 @@ rutas.post('/crear', async (req, res) => {
         nombre: req.body.nombre,
         docente: req.body.docente,
         materia: req.body.materia,
-        empresa: req.body.empresaToyota,
-        empresa: req.body.empresaHonda,
+        empresaToyota: req.body.empresaToyota,
+        empresaHonda: req.body.empresaHonda,
         año: req.body.año,
     })
     try {
@@ -112,25 +112,7 @@ rutas.get('/ordenarlistas', async (req, res) => {
     }
 });
 
-// - obtener lista por cantidad
-rutas.get('/listasordenadas', async (req, res) => {
-    try {
-       const bienvenida = await bienbenidamodelos.find({ lista : req.params.cantidad});
-       res.status(200).json(recetas);
-    } catch(error) {
-        res.status(500).json({ mensaje :  error.message})
-    }
-});
 
-//endpoint 6 - obtener empresa por un toyota especifico
-rutas.get('/empresa', async (req, res) => {
-    try {
-        const empresaToyota = await bienvenidaModel.find({ empresa: new RegExp(req.params.empresa, 'i')});
-        return res.json(empresaToyota);
-    } catch(error) {
-        res.status(500).json({ mensaje :  error.message})
-    }
-});
 
 
 
