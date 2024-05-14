@@ -32,13 +32,13 @@ rutas.post('/crear', async (req, res) => {
         res.status(201).json(nuevabienvenida);
     } catch (error) {
         res.status(400).json({ mensage :  error.message})
-    }
+    }editar
 });
 //  ENDPOINT 3. Editar
 rutas.put('/editar/:id', async (req, res) => {
     try {
-        const recetabienvenida = await bienvenidaModel.findByIdAndUpdate(req.params.id, req.body, { new : true });
-        if (!recetabienvenida)
+        const bienvenidaEditada = await bienvenidaModel.findByIdAndUpdate(req.params.id, req.body, { new : true });
+        if (!bienvenidaEditada)
             return res.status(404).json({ mensage : 'bienvenida no encontrada!!!'});
         else
             return res.status(201).json(bienvenidaEditada);
