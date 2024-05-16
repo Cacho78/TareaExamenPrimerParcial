@@ -1,6 +1,9 @@
 // importacion de libs
 const express = require('express');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+const authRutas = require('./rutas/authRutas');
+const Usuario = require('./autos/Usuario');
 require('dotenv').config();
 const app = express();
 
