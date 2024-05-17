@@ -18,11 +18,28 @@ const MONGO_URI = process.env.MONGO_URI;
 app.use(express.json());
 //Conexion con Mongodb
 mongoose.connect(MONGO_URI)
-.then(() => { 
-    console.log('Conexion Exitosa');
-    app.listen(PORT, () => {console.log("Servidor Express Corriendo en el Puerto: "+PORT)})
+.then(() => {
+    console.log('Conexion exitosa');
+    app.listen(PORT, () => {console.log("Servidor express corriendo en el puerto: "+PORT)})
 }
-).catch( error => console.log('Error de Conexion', error));
+).catch( error => console.log('error de conexion', error));
 
-//utilizar las rutas de bienvenida
-app.use('/bienvenida', bienvenidaruta);
+const autenticar = async (req, res, next)=>{
+    try {
+        const token = req.headers.authorization?.split(' ')[1];
+        if (!token)
+            res.status(401).json({mensage: 'No existe el token de autenticacion'});
+        const decodificar = jwt.verify(token, 'clave_secreta');
+        req.usuario = await  Usuario.findById(decodificar.usuarioId);
+        next();
+    }
+    catch(error){
+        res.status(400).json({ error: error.message});
+    }
+};
+
+app.use('/auth', authRutas);
+app.use('/bienvenida', autenticar, bienvenidaruta);
+
+//utilizar las rutas de recetas
+// app.use('/recetarios', recetaRutas);

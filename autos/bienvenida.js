@@ -5,9 +5,18 @@ const bienvenidaSchema = new mongoose.Schema({
     nombre: String,
     docente: String,
     materia: String,
-    empresaToyota: String,
-    empresaHonda: String,
+    empresa: String,
+    modelo : String,
     año: Number
 });
+
+
+
+
+
+
+
+
+
 const bienvenidaModel = mongoose.model('Bienvenida',bienvenidaSchema, 'bienvenida');
 module.exports = bienvenidaModel;

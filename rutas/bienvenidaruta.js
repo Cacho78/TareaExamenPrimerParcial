@@ -77,8 +77,9 @@ rutas.get('/lista/:id', async (req, res) => {
  // ENDPOINT 6. obtener lista por un modelo especifico
 rutas.get('/bienvenidaPormodelo/:modelo', async (req, res) => {
     try {
-        const bienbenidamodelos = await bienvenidaModel.find({ ingrediente: req.params.ingrediente});
-        return res.json(bienvenidamodelo);
+        console.log(req.params.modelo);
+        const bienbenidamodelos = await bienvenidaModel.find({ modelo: req.params.modelo});
+        return res.json(bienbenidamodelos);
     } catch(error) {
         res.status(500).json({ mensaje :  error.message})
     }
