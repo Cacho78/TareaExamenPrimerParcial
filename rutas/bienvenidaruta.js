@@ -1,6 +1,9 @@
 const express = require('express');
 const rutas = express.Router();
 const bienvenidaModel = require('../autos/bienvenida');
+const usuarioModel = require('../autos/Usuario');
+const monitoreoModel = require('../autos/monitoreo');
+const mongoose = require('mongoose');
 
 //  EDPOINT 1. traer todo
 rutas.get('/getbienvenida', async (req, res) =>{
@@ -26,13 +29,14 @@ rutas.post('/crear', async (req, res) => {
         empresa: req.body.empresaToyota,
         empresa: req.body.empresaHonda,
         año: req.body.año,
+        usuario: req.usuario._id // asignacion al usuario
     })
     try {
         const nuevabienvenida = await bienvenida.save();
         res.status(201).json(nuevabienvenida);
     } catch (error) {
         res.status(400).json({ mensage :  error.message})
-    }editar
+    }
 });
 //  ENDPOINT 3. Editar
 rutas.put('/editar/:id', async (req, res) => {
@@ -81,7 +85,7 @@ rutas.get('/bienvenidaPormodelo/:modelo', async (req, res) => {
         const bienbenidamodelos = await bienvenidaModel.find({ modelo: req.params.modelo});
         return res.json(bienbenidamodelos);
     } catch(error) {
-        res.status(500).json({ mensaje :  error.message})
+        res.status(500).json({ mensage :  error.message})
     }
 });
 // ENDPOINT 7 - eliminar todas las recetas
@@ -116,7 +120,7 @@ rutas.get('/ordenarlistas', async (req, res) => {
 // - obtener lista por cantidad
 rutas.get('/listasordenadas', async (req, res) => {
     try {
-       const bienvenida = await bienbenidamodelos.find({ lista : req.params.cantidad});
+       const bienvenida = await bienvenidaModel.find({ lista : req.params.cantidad});
        res.status(200).json(recetas);
     } catch(error) {
         res.status(500).json({ mensaje :  error.message})
@@ -129,12 +133,54 @@ rutas.get('/empresa', async (req, res) => {
         const empresaToyota = await bienvenidaModel.find({ empresa: new RegExp(req.params.empresa, 'i')});
         return res.json(empresaToyota);
     } catch(error) {
-        res.status(500).json({ mensaje :  error.message})
+        res.status(500).json({ mensage :  error.message})
     }
 });
 
+//REPORTES 1
+rutas.get('listaporusuario/:usuarioId', async (peticion, respuesta) =>{
+   const {usuarioId} = peticion.params;
+   try{
+
+       const usuario = await usuarioModel.findById(usuarioId);
+       if (!usuario)
+        return res.status(404).json({mensage: 'usuario no encontrado'});
+        const lista = await bienvenidaModel.find({usuario: usuarioId}).populate('usuario');
+        respuesta.json(lista);
 
 
-
+   }catch(error){
+    respuesta.status(500).json({mensage : error.message})
+   }
+});
+//REPORTES 2
+//sumar porciones de recetas por Usuarios
+rutas.get('/listausuario', async (req, res) => {
+    try {   
+        const usuarios = await usuarioModel.find();
+        const reporte = await Promise.all(
+            usuarios.map( async ( usuario1 ) => {
+                const listas = await bienvenidaModel.find({ usuario: usuario1._id});
+                const totallista = listas.reduce((sum, receta) => sum + listas.listas, 0);
+                return {
+                    usuario: {
+                        _id: usuario1._id,
+                        nombreusuario: usuario1.nombreusuario
+                    },
+                    totallista,
+                    listas: listas.map( r => ( {
+                        _id: r._id,
+                        nombre: r.nombre,
+                        universidad: r.universidad
+                    }))
+                }
+            } )
+        )
+        res.json(reporte);
+    } catch (error){
+        res.status(500).json({ mensage :  error.message})
+    }
+})
 
 module.exports = rutas;
+

@@ -2,8 +2,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
-const authRutas = require('./rutas/authRutas');
-const Usuario = require('./autos/Usuario');
+const autoRutas = require('./rutas/autoRutas');
+const UsuarioModel = require('./autos/Usuario');
+const monitoreoRutas = require('./rutas/monitoreoRuta');
 require('dotenv').config();
 const app = express();
 
@@ -30,7 +31,7 @@ const autenticar = async (req, res, next)=>{
         if (!token)
             res.status(401).json({mensage: 'No existe el token de autenticacion'});
         const decodificar = jwt.verify(token, 'clave_secreta');
-        req.usuario = await  Usuario.findById(decodificar.usuarioId);
+        req.usuario = await  UsuarioModel.findById(decodificar.usuarioId);
         next();
     }
     catch(error){
@@ -38,8 +39,10 @@ const autenticar = async (req, res, next)=>{
     }
 };
 
-app.use('/auth', authRutas);
+app.use('/auth', autoRutas);
 app.use('/bienvenida', autenticar, bienvenidaruta);
+ app.use('/monitoreo', autenticar, monitoreoRutas);
+
 
 //utilizar las rutas de recetas
 // app.use('/recetarios', recetaRutas);

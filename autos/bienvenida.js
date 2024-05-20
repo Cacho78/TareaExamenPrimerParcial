@@ -7,16 +7,9 @@ const bienvenidaSchema = new mongoose.Schema({
     materia: String,
     empresa: String,
     modelo : String,
-    año: Number
+    año: Number,
+    usuario: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario' },
+  
 });
-
-
-
-
-
-
-
-
-
 const bienvenidaModel = mongoose.model('Bienvenida',bienvenidaSchema, 'bienvenida');
 module.exports = bienvenidaModel;
