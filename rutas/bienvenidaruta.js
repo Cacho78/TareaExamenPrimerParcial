@@ -26,10 +26,9 @@ rutas.post('/crear', async (req, res) => {
         nombre: req.body.nombre,
         docente: req.body.docente,
         materia: req.body.materia,
-        empresa: req.body.empresaToyota,
-        empresa: req.body.empresaHonda,
+        empresa: req.body.empresa,
         año: req.body.año,
-        usuario: req.usuario._id // asignacion al usuario
+        usuario: req.body.usuario // asignacion al usuario
     })
     try {
         const nuevabienvenida = await bienvenida.save();
