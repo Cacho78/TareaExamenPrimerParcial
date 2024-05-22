@@ -22,11 +22,13 @@ describe('Pruebas Unitarias para listas', () => {
 
     //1er test : GET
     test('Deberia Traer todas las listas metodo: GET: getbienvenida', async() =>{
-        await bienvenidaModel.create({ universidad: 'San Pablo Catolica', nombre: 'Maria Isabel Fernholz Soto', docente:'javier senteno'  });
+        const test = await bienvenidaModel.create({ universidad: 'San Pablo Catolica 2', nombre: 'Maria Isabel Fernholz Soto', docente:'javier senteno'  });
         await bienvenidaModel.create({  materia: 'planfinanciero', empresa: 'Toyota', modelo: 'Corolla', año:  2023 });
         // solicitud - request
+        console.log(test);
         const res =  await request(app).get('/bienvenida/getbienvenida');
         //verificar la respuesta
+        console.log(res.body);
         expect(res.statusCode).toEqual(200);
         expect(res.body).toHaveLength(2);
     }, 10000);
