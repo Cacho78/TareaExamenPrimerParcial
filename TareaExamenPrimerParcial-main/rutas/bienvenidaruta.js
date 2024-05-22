@@ -137,7 +137,7 @@ rutas.get('/empresa', async (req, res) => {
 });
 
 //REPORTES 1
-rutas.get('/listaporusuario/:usuarioId', async (peticion, respuesta) =>{
+rutas.get('listaporusuario/:usuarioId', async (peticion, respuesta) =>{
    const {usuarioId} = peticion.params;
    try{
 
@@ -154,7 +154,7 @@ rutas.get('/listaporusuario/:usuarioId', async (peticion, respuesta) =>{
 });
 //REPORTES 2
 //sumar porciones de recetas por Usuarios
-rutas.get('nodemon', async (req, res) => {
+rutas.get('/listausuario', async (req, res) => {
     try {   
         const usuarios = await usuarioModel.find();
         const reporte = await Promise.all(
